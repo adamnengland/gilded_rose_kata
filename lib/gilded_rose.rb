@@ -2,7 +2,7 @@ def decreases_in_quality(item)
   item.name != 'Sulfuras, Hand of Ragnaros'
 end
 
-def increases_in_quality_approaching_sellin(item)
+def decreases_in_quality_approaching_sellin(item)
   item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
 end
 
@@ -14,31 +14,35 @@ def quality_can_increase(item)
   item.quality < 50
 end
 
+def item_increases_in_value_then_collapses?(item)
+  item.name == 'Backstage passes to a TAFKAL80ETC concert'
+end
+
+def increase_quality(item)
+  item.quality += 1
+end
+
+def decrease_quality(item)
+  item.quality -= 1
+end
+
 def update_quality(items)
   items.each do |item|
     #if item.name == "Conjured Mana Cake"
     #  if item.quality > 0
     #    item.quality
     #end
-    if increases_in_quality_approaching_sellin(item)
-      if item.quality > 0
-        if decreases_in_quality(item)
-          item.quality -= 1
-        end
-      end
+    if decreases_in_quality_approaching_sellin(item)
+      decrease_quality(item) if decreases_in_quality(item) && item.quality > 0
     else
       if quality_can_increase(item)
         item.quality += 1
-        if item.name == 'Backstage passes to a TAFKAL80ETC concert'
+        if item_increases_in_value_then_collapses?(item)
           if item.sell_in <= 10
-            if quality_can_increase(item)
-              item.quality += 1
-            end
+            increase_quality(item) if quality_can_increase(item)
           end
           if item.sell_in <= 5
-            if quality_can_increase(item)
-              item.quality += 1
-            end
+            increase_quality(item) if quality_can_increase(item)
           end
         end
       end
@@ -48,14 +52,14 @@ def update_quality(items)
     end
     if past_sellin_date(item)
       if item.name != "Aged Brie"
-        if item.name != 'Backstage passes to a TAFKAL80ETC concert'
+        if !item_increases_in_value_then_collapses?(item)
           if item.quality > 0
             if decreases_in_quality(item)
               item.quality -= 1
             end
           end
         else
-          item.quality = item.quality - item.quality
+          item.quality = 0
         end
       else
         if quality_can_increase(item)
