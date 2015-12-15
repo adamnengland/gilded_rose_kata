@@ -1,39 +1,52 @@
 def decreases_in_quality(item)
   item.name != 'Sulfuras, Hand of Ragnaros'
 end
+
+def increases_in_quality_approaching_sellin(item)
+  item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
+end
+
+def past_sellin_date(item)
+  item.sell_in < 0
+end
+
+def quality_can_increase(item)
+  item.quality < 50
+end
+
 def update_quality(items)
   items.each do |item|
     #if item.name == "Conjured Mana Cake"
     #  if item.quality > 0
     #    item.quality
     #end
-    if item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
+    if increases_in_quality_approaching_sellin(item)
       if item.quality > 0
-        if item.name != 'Sulfuras, Hand of Ragnaros'
+        if decreases_in_quality(item)
           item.quality -= 1
         end
       end
     else
-      if item.quality < 50
+      if quality_can_increase(item)
         item.quality += 1
         if item.name == 'Backstage passes to a TAFKAL80ETC concert'
-          if item.sell_in < 11
-            if item.quality < 50
+          if item.sell_in <= 10
+            if quality_can_increase(item)
               item.quality += 1
             end
           end
-          if item.sell_in < 6
-            if item.quality < 50
+          if item.sell_in <= 5
+            if quality_can_increase(item)
               item.quality += 1
             end
           end
         end
       end
     end
-    if item.name != 'Sulfuras, Hand of Ragnaros'
+    if decreases_in_quality(item)
       item.sell_in -= 1
     end
-    if item.sell_in < 0
+    if past_sellin_date(item)
       if item.name != "Aged Brie"
         if item.name != 'Backstage passes to a TAFKAL80ETC concert'
           if item.quality > 0
@@ -45,7 +58,7 @@ def update_quality(items)
           item.quality = item.quality - item.quality
         end
       else
-        if item.quality < 50
+        if quality_can_increase(item)
           item.quality += 1
         end
       end
