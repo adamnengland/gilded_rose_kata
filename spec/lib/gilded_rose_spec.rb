@@ -161,9 +161,7 @@ describe "#update_quality" do
       end
     end
 
-    if 1 == 2
     context "conjured item" do
-      before { pending }
       Given(:name) { "Conjured Mana Cake" }
 
       Invariant { item.sell_in.should == initial_sell_in-1 }
@@ -177,7 +175,7 @@ describe "#update_quality" do
           Then { item.quality.should == initial_quality }
         end
       end
-
+      if 1 == 2
       context "on sell date" do
         Given(:initial_sell_in) { 0 }
         Then { item.quality.should == initial_quality-4 }
@@ -197,7 +195,7 @@ describe "#update_quality" do
           Then { item.quality.should == initial_quality }
         end
       end
-    end
+      end
     end
   end
 

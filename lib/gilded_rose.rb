@@ -1,3 +1,7 @@
+def legendary?(item)
+  item.name == "Conjured Mana Cake"
+end
+
 def decreases_in_quality(item)
   item.name != 'Sulfuras, Hand of Ragnaros'
 end
@@ -23,15 +27,15 @@ def increase_quality(item)
 end
 
 def decrease_quality(item)
-  item.quality -= 1
+  if legendary?(item)
+    item.quality -= 2
+  else
+    item.quality -= 1
+  end
 end
 
 def update_quality(items)
   items.each do |item|
-    #if item.name == "Conjured Mana Cake"
-    #  if item.quality > 0
-    #    item.quality
-    #end
     if decreases_in_quality_approaching_sellin(item)
       decrease_quality(item) if decreases_in_quality(item) && item.quality > 0
     else
